@@ -1,0 +1,21 @@
+---
+burricks:
+  oauth_token: d8d6df7723f9f479f9b910777db85b6f555d175cade9ec5fc2e7162bb545607a
+  api_key: a9acec5b725b2ac646aaf7ae746493c9
+  board_ids:
+    github-trello: 53d2aa38b0bc99633bd659fa
+  on_start:
+    move_to: 53d2aa38b0bc99633bd659fc
+    archive: true
+  on_close:
+    move_to: 53d2aa38b0bc99633bd659fd
+    archive: true
+  on_close/on_start:
+    move_to:
+      ? - repo name
+      : - list id
+  on_deploy:
+    move_to:
+      ? - repo name
+      : - list id
+    archive: true
