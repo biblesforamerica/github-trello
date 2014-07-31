@@ -1,10 +1,10 @@
 ---
 users:
   dina:
-    oauthtoken: 2a
+    oauth_token: 2a
     api_key: 1a
   burricks:
-    oauthtoken: d8d6df7723f9f479f9b910777db85b6f555d175cade9ec5fc2e7162bb545607a
+    oauth_token: d8d6df7723f9f479f9b910777db85b6f555d175cade9ec5fc2e7162bb545607a
     api_key: a9acec5b725b2ac646aaf7ae746493c9
 repos:
   init: 
@@ -18,4 +18,15 @@ repos:
       archive: true
     on_done:
       move_to: 4a
+      archive: true
+  github-trello:
+    board_id: 53d2aa38b0bc99633bd659fa
+    on_doing:
+      move_to: 53d6bedf243922dfc871602e
+      archive: true
+    on_review:
+      move_to: 53d6bedf243922dfc871602f
+      archive: true
+    on_done:
+      move_to: 53d6bedf243922dfc871602g
       archive: true

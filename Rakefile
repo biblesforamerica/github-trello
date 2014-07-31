@@ -42,7 +42,7 @@ task :add_user do
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["users"][username] = {"oauthtoken" => token, "api_key" => key}
+					yml_file["users"][username] = {"oauth_token" => token, "api_key" => key}
 					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
 					puts "Saved"
 				else end
