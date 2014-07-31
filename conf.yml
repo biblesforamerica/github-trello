@@ -1,5 +1,21 @@
 ---
 users:
-  init: 
+  dina:
+    oauthtoken: 2a
+    api_key: 1a
+  burricks:
+    oauthtoken: d8d6df7723f9f479f9b910777db85b6f555d175cade9ec5fc2e7162bb545607a
+    api_key: a9acec5b725b2ac646aaf7ae746493c9
 repos:
-  init:
+  init: 
+  bfa_oms:
+    board_id: 1a
+    on_doing:
+      move_to: 2a
+      archive: true
+    on_review:
+      move_to: 3a
+      archive: true
+    on_done:
+      move_to: 4a
+      archive: true

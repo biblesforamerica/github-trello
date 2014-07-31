@@ -42,7 +42,7 @@ task :add_user do
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["users"] = {username => {"oauthtoken" => token, "api_key" => key}}
+					yml_file["users"][username] = {"oauthtoken" => token, "api_key" => key}
 					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
 					puts "Saved"
 				else end
@@ -86,11 +86,11 @@ task :add_repo do
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["repos"] = {repo => { "board_id" => board, 
+					yml_file["repos"][repo] = { "board_id" => board, 
 						"on_doing" => {"move_to" => doing, "archive" => true},
 						"on_review" => {"move_to" => review, "archive" => true},
 						"on_done" => {"move_to" => done, "archive" => true}
-						}}
+						}
 					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
 					puts "Saved"
 				else end
