@@ -12,11 +12,6 @@ module GithubTrello
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
       repo = payload["repository"]["name"]
-      # path = File.expand_path(File.dirname(_FILE_) + "/../../conf.yaml")
-      # y = YAML::load_file(path)
-      puts "hello"
-      puts repo
-      #make sure needed information is present
       unless config["users"][committer]
         puts "[ERROR] Github username not recognized. Run rake add_user"
       end
@@ -25,7 +20,7 @@ module GithubTrello
         puts "[ERROR] Github repo not recognized. Run rake add_repo"
       end
 
-      #deploy comment! :) 
+      #deploy comment
 
       board_id = config["repos"][repo]["board_id"]
       puts board_id
@@ -72,19 +67,9 @@ module GithubTrello
 
         next 
 
-        puts update_config
-
-        # next unless update_config.is_a?(Hash)
-
          # Modify it if needed
          to_update = {}
          move_to = update_config["move_to"]
-
-        # # if update_config["move_to"].is_a?(Hash)
-        # #   move_to = update_config["move_to"][payload["repository"]["name"]]
-        # # else
-        # #   move_to = update_config["move_to"]
-        # # end
 
         unless results["idList"] == move_to
           to_update[:idList] = move_to
@@ -102,44 +87,6 @@ module GithubTrello
       ""
     end
 
-   # post "/deployed/:repo" do
-    #   config, http = self.class.config, self.class.http
-    #   if !config["on_deploy"]
-    #     raise "Deploy triggered without a on_deploy config specified"
-    #   elsif !config["on_close"] or !config["on_close"]["move_to"]
-    #     raise "Deploy triggered and either on_close config missed or move_to is not set"
-    #   end
-
-    #   update_config = config["on_deploy"]
-
-    #   to_update = {}
-    #   if update_config["move_to"] and update_config["move_to"][params[:repo]]
-    #     to_update[:idList] = update_config["move_to"][params[:repo]]
-    #   end
-
-    #   if update_config["archive"]
-    #     to_update[:closed] = true
-    #   end
-
-    #   if config["on_close"]["move_to"].is_a?(Hash)
-    #     target_board = config["on_close"]["move_to"][params[:repo]]
-    #   else
-    #     target_board = config["on_close"]["move_to"]
-    #   end
-
-    #   cards = JSON.parse(http.get_cards(target_board))
-    #   cards.each do |card|
-    #     http.update_card(card["id"], to_update)
-    #   end
-
-    #   ""
-   #end
-
-    # get "/" do
-    #   ""
-    # end
-
-  
     def self.config=(config)
       @config = config
       @http = GithubTrello::HTTP.new(config["users"]["burricks"]["oauth_token"], config["users"]["burricks"]["api_key"])
