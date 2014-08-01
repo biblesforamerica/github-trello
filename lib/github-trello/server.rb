@@ -11,9 +11,10 @@ module GithubTrello
       committer = payload["head_commit"]["committer"]["username"]
       config = self.class.config 
       repo = payload["repository"]["name"]
-      unless config["users"][committer]
-        puts "[ERROR] Github username not recognized. Run rake add_user"
-      end
+      puts config
+      # unless config["users"][committer]
+      #   puts "[ERROR] Github username not recognized. Run rake add_user"
+      # end
 
       # unless config["repos"][repo]
       #   puts "[ERROR] Github repo not recognized. Run rake add_repo"
@@ -83,7 +84,7 @@ module GithubTrello
     #   ""
      end
 
-    post '/' do
+    get '/' do
       "Hello World!"
       "That's all!"
     end
