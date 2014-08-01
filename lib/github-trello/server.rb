@@ -9,7 +9,7 @@ module GithubTrello
     post "/posthook" do
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
-    #   config = self.class.config 
+      config = self.class.config 
     #   repo = payload["repository"]["name"]
     #   unless config["users"][committer]
     #     puts "[ERROR] Github username not recognized. Run rake add_user"
