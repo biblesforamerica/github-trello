@@ -89,6 +89,11 @@ module GithubTrello
       "That's all!"
     end
 
+    post '/' do
+      payload = JSON.parse(params[:payload])
+      puts payload
+    end
+
     def self.config=(config)
       @config = config
     end
