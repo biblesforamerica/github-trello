@@ -34,6 +34,8 @@ module GithubTrello
         return
       end
 
+      puts "hello"
+
     #   http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
 
     #   payload["commits"].each do |commit|
