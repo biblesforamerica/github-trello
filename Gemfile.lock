@@ -40,3 +40,4 @@ DEPENDENCIES
   github-trello!
   rake
   rspec
+  sinatra
