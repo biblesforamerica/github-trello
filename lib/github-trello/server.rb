@@ -9,9 +9,7 @@ module GithubTrello
     post "/posthook" do
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
-      config = self.class.config #LOOK HERE
-      http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
-      # http = self.class.http
+      config = self.class.config 
       repo = payload["repository"]["name"]
       unless config["users"][committer]
         puts "[ERROR] Github username not recognized. Run rake add_user"
@@ -24,7 +22,6 @@ module GithubTrello
       #deploy comment
 
       board_id = config["repos"][repo]["board_id"]
-      puts board_id
       unless board_id
         puts "[ERROR] Commit from #{payload["repository"]["name"]} but no board_id entry found in config. Run rake update_repo"
         return
@@ -37,9 +34,11 @@ module GithubTrello
         return
       end
 
+      http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
+
       payload["commits"].each do |commit|
         # Figure out the card short id
-        match = commit["message"].match(/((case|card|close|archive|fix)e?s? \D?([0-9]+))/i)
+        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
         next unless match and match[3].to_i > 0
 
         results = http.get_card(board_id, match[3].to_i)
@@ -63,10 +62,10 @@ module GithubTrello
           when "doing" then config["repos"][repo]["on_doing"]
           when "review" then config["repos"][repo]["on_review"]
           when "done" then config["repos"][repo]["on_done"]
-          when "archive" then {:archive => true}
+          # when "archive" then {:archive => true}
         end
 
-        next 
+        # next
 
          # Modify it if needed
          to_update = {}
@@ -76,9 +75,9 @@ module GithubTrello
           to_update[:idList] = move_to
         end
 
-        if !results["closed"] and update_config["archive"]
-          to_update[:closed] = true
-        end
+        # if !results["closed"] and update_config["archive"]
+        #   to_update[:closed] = true
+        # end
 
         unless to_update.empty?
           http.update_card(results["id"], to_update)
@@ -90,19 +89,8 @@ module GithubTrello
 
     def self.config=(config)
       @config = config
-      # @http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"]["burricks"]["api_key"])
     end
 
-    # def self.http=(committer, config)
-    #   @http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"]["burricks"]["api_key"])
-    # end
-
-
-    # def self.http=(config)
-    #   @http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"]["burricks"]["api_key"])
-    # end
-
     def self.config; @config end
-    # def self.http; @http end
   end
 end
