@@ -1,1 +1,1 @@
-web: trello-web
+web: trello-web -L
