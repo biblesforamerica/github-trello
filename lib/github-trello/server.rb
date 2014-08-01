@@ -6,7 +6,7 @@ require "yaml"
 
 module GithubTrello
   class Server < Sinatra::Base
-    post "/posthook" do
+    post "/" do
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
       config = self.class.config 
@@ -83,7 +83,7 @@ module GithubTrello
       ""
     end
 
-    get '/' do
+    get '/posthook' do
       "Hello World!"
 
       payload = JSON.parse(params[:payload])
