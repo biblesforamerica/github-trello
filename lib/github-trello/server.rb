@@ -83,7 +83,7 @@ module GithubTrello
       ""
     end
 
-    get '/posthook' do
+    post '/posthook' do
       "Hello World!"
 
       payload = JSON.parse(params[:payload])
