@@ -10,14 +10,14 @@ module GithubTrello
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
       config = self.class.config 
-    #   repo = payload["repository"]["name"]
-    #   unless config["users"][committer]
-    #     puts "[ERROR] Github username not recognized. Run rake add_user"
-    #   end
+      repo = payload["repository"]["name"]
+      unless config["users"][committer]
+        puts "[ERROR] Github username not recognized. Run rake add_user"
+      end
 
-    #   unless config["repos"][repo]
-    #     puts "[ERROR] Github repo not recognized. Run rake add_repo"
-    #   end
+      unless config["repos"][repo]
+        puts "[ERROR] Github repo not recognized. Run rake add_repo"
+      end
 
     #   #deploy comment
 
