@@ -1,1 +1,1 @@
-web: unicorn -p $PORT -c unicorn.rb
+web: unicorn -c unicorn.rb
