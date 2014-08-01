@@ -62,18 +62,23 @@ module GithubTrello
 
         http.add_comment(results["id"], message)
 
-        # # Determine the action to take
-        # update_config = case match[2].downcase
-        #   when "doing" then config["repos"][repo]["on_doing"]
-        #   when "review" then config["repos"][repo]["on_review"]
-        #   when "done" then config["repos"][repo]["on_done"]
-        #   when "archive" then {:archive => true}
-        # end
+        # Determine the action to take
+        update_config = case match[2].downcase
+          when "doing" then config["repos"][repo]["on_doing"]
+          when "review" then config["repos"][repo]["on_review"]
+          when "done" then config["repos"][repo]["on_done"]
+          when "archive" then {:archive => true}
+        end
 
-        # # next unless update_config.is_a?(Hash)
+        next 
 
-        #  # Modify it if needed
-        #  to_update = {}
+        puts update_config
+
+        # next unless update_config.is_a?(Hash)
+
+         # Modify it if needed
+         to_update = {}
+         move_to = update_config["move_to"]
 
         # # if update_config["move_to"].is_a?(Hash)
         # #   move_to = update_config["move_to"][payload["repository"]["name"]]
@@ -81,17 +86,17 @@ module GithubTrello
         # #   move_to = update_config["move_to"]
         # # end
 
-        # unless results["idList"] == update_config
-        #   to_update[:idList] = update_config
-        # end
+        unless results["idList"] == move_to
+          to_update[:idList] = move_to
+        end
 
-        # if !results["closed"] and update_config["archive"]
-        #   to_update[:closed] = true
-        # end
+        if !results["closed"] and update_config["archive"]
+          to_update[:closed] = true
+        end
 
-        # unless to_update.empty?
-        #   http.update_card(results["id"], to_update)
-        # end
+        unless to_update.empty?
+          http.update_card(results["id"], to_update)
+        end
       end
 
       ""
