@@ -85,6 +85,35 @@ module GithubTrello
 
     get '/' do
       "Hello World!"
+
+      payload = JSON.parse(params[:payload])
+      committer = payload["head_commit"]["committer"]["username"]
+      config = self.class.config 
+      repo = payload["repository"]["name"]
+      unless config["users"][committer]
+        puts "[ERROR] Github username not recognized. Run rake add_user"
+      end
+
+      unless config["repos"][repo]
+        puts "[ERROR] Github repo not recognized. Run rake add_repo"
+      end
+
+      #deploy comment
+
+      board_id = config["repos"][repo]["board_id"]
+      unless board_id
+        puts "[ERROR] Commit from #{payload["repository"]["name"]} but no board_id entry found in config. Run rake update_repo"
+        return
+      end
+
+      branch = payload["ref"].gsub("refs/heads/", "")
+      if config["blacklist_branches"] and config["blacklist_branches"].include?(branch)
+        return
+      elsif config["whitelist_branches"] and !config["whitelist_branches"].include?(branch)
+        return
+      end
+
+      "That's all!"
     end
 
     def self.config=(config)
