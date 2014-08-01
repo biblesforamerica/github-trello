@@ -83,6 +83,10 @@ module GithubTrello
       ""
     end
 
+    get '/' do
+      "Hello World!"
+    end
+
     def self.config=(config)
       @config = config
     end
