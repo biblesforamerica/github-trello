@@ -7,10 +7,11 @@ require "yaml"
 module GithubTrello
   class Server < Sinatra::Base
     post "/posthook" do
-      config, http = self.class.config, self.class.http
-
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
+      config = self.class.config #LOOK HERE
+      http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
+      # http = self.class.http
       repo = payload["repository"]["name"]
       unless config["users"][committer]
         puts "[ERROR] Github username not recognized. Run rake add_user"
@@ -89,10 +90,19 @@ module GithubTrello
 
     def self.config=(config)
       @config = config
-      @http = GithubTrello::HTTP.new(config["users"]["burricks"]["oauth_token"], config["users"]["burricks"]["api_key"])
+      # @http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"]["burricks"]["api_key"])
     end
 
+    # def self.http=(committer, config)
+    #   @http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"]["burricks"]["api_key"])
+    # end
+
+
+    # def self.http=(config)
+    #   @http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"]["burricks"]["api_key"])
+    # end
+
     def self.config; @config end
-    def self.http; @http end
+    # def self.http; @http end
   end
 end

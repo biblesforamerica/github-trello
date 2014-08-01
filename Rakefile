@@ -19,6 +19,10 @@ end
 
 task :default => :spec
 
+task :serve do
+   %x{trello-web -L}
+end
+
 task :add_user do
 	STDOUT.puts "What is your github username?"
 	username = STDIN.gets.strip
