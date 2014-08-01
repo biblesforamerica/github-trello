@@ -1,1 +1,0 @@
-web: unicorn -c unicorn.rb
