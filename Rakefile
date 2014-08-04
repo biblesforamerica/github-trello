@@ -58,23 +58,38 @@ def edit_field(key_type, key_name, field_name, yml_file)
 		else end
 end
 
-task :default => :spec
+def display(key_type, key_name, yml_file)
+	if key_type == "users"
+		then array = ["oauth_token", "api_key"]
+		elsif key_type == "repos"
+		then array = ["board_id", "on_doing", "on_review", "on_done"]
+		else print "Error: key_type not recognized" 
+	end
 
-task :user?, :username do |t, args|
-	yml_file = YAML.load_file('conf.yml')
-	username = args[:username]
-	if yml_file["users"][username]
-		puts true
-	else puts false
+	array.each_with_index do |k, i|
+		puts (i + 1).to_s+") "+k.to_s+": "+yml_file[key_type][key_name][k].to_s
 	end
 end
 
-task :repo?, :repo do |t, args|
+
+
+task :default => :spec
+
+task :show_user, :username do |t, args|
+	yml_file = YAML.load_file('conf.yml')
+	username = args[:username]
+	if yml_file["users"][username]
+		display("users", username, yml_file)
+	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
+	end
+end
+
+task :show_repo, :repo do |t, args|
 	yml_file = YAML.load_file('conf.yml')
 	repo = args[:repo]
 	if yml_file["repos"][repo]
-		puts true
-	else puts false
+		display("repos", repo, yml_file)
+	else puts "This repo does not exist in the configuration file. To add it, run: \n  heroku run rake add_repo --app trello-github-integrate"
 	end
 end
 
@@ -83,9 +98,7 @@ task :add_user do
 	username = STDIN.gets.strip
 	yml_file = YAML.load_file('conf.yml') 
 	if yml_file["users"][username]
-		STDOUT.puts "This username exists in the configuration file. Press 'y' to edit the username, or any other key to cancel"
-		edit = STDIN.gets.strip
-		if edit == 'y' then puts "I need to run a rake task" else end
+		puts "This username exists in the configuration file. To edit it, run: \n  heroku run rake edit_user --app trello-github-integrate"
 	else 
 		STDOUT.puts "Your username will be added to the configuration file. Press 'y' to continue, or any other key to exit"
 		continue = STDIN.gets.strip
@@ -115,9 +128,7 @@ task :add_repo do
 	repo = STDIN.gets.strip
 	yml_file = YAML.load_file('conf.yml')
 	if yml_file["repos"][repo]
-		STDOUT.print "This repo exists in the configuration file. Press 'y' to edit the repo, or any other key to exit: "
-		edit = STDIN.gets.strip
-		if edit == 'y' then puts "I need to run a rake task" else end
+		puts "This repository exists in the configuration file. To edit it, run: \n  heroku run rake edit_repo --app trello-github-integrate"
 	else 
 		STDOUT.print "This repo will be added to the configuration file. Continue (y) or exit (any other key): "
 		continue = STDIN.gets.strip
@@ -180,4 +191,33 @@ task :edit_repo do
 		puts "This repo does not exist. To create it, run rake add_repo."
 	end
 end
+
+task :delete_repo do
+	STDOUT.puts "Which repo would you like to delete?"
+	repo = STDIN.gets.strip
+	yml_file = YAML.load_file('conf.yml')
+	print "Are you sure you want to delete the repository information for " +repo+"? If so, press 'y'. To cancel, press any other key: "
+	response = STDIN.gets.strip
+	if response == "y" 
+	then 
+		yml_file["repos"].delete(repo)
+		File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+		puts "Repo deleted"
+	else end 
+end
+
+task :delete_user do
+	STDOUT.puts "Which user would you like to delete?"
+	user = STDIN.gets.strip
+	yml_file = YAML.load_file('conf.yml')
+	print "Are you sure you want to delete the user information for " +user+"? If so, press 'y'. To cancel, press any other key: "
+	response = STDIN.gets.strip
+	if response == "y" 
+	then 
+		yml_file["users"].delete(user)
+		File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+		puts "User deleted"
+	else end 
+end
+
 
