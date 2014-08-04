@@ -17,11 +17,49 @@ def check_file (file, string)
 	false
 end
 
-task :default => :spec
+def prompt_edit(key_type, key_name, yml_file)
+	if key_type == "users"
+		then array = ["oauth_token", "api_key"]
+		elsif key_type == "repos"
+		then array = ["board_id", "on_doing", "on_review", "on_done"]
+		else print "Error: key_type not recognized" 
+	end
 
-task :serve do
-   %x{trello-web -L}
+	begin 
+		puts "Please enter an integer value corresponding to the field you would like to edit, or 0 to cancel:"
+		puts "0) Cancel"
+		array.each_with_index do |k, i|
+			puts (i + 1).to_s+") "+k.to_s+": "+yml_file[key_type][key_name][k].to_s
+		end
+		puts "Which field would you like to edit? (eg. 1) \n"
+		field_no = STDIN.gets.strip
+	end while field_no.to_i < 0 || field_no.to_i > array.size + 1
+
+	unless field_no == "0"
+		field = array.at(field_no.to_i - 1)
+		edit_field(key_type, key_name, field, yml_file)
+	end
+
+	puts "Canceled"
 end
+
+def edit_field(key_type, key_name, field_name, yml_file)
+		print "Please enter a new "+ field_name + ": "
+		ot = STDIN.gets.strip
+		print "Press y to save or any other key to cancel: "
+		if STDIN.gets.strip == "y" 
+		then 
+			yml_file[key_type][key_name][field_name] = ot
+			File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+			print "To make any further edits, press y, to cancel press any other key: "
+			if STDIN.gets.strip == "y" 
+			then prompt_edit(key_type, key_name, yml_file)
+			else end
+		else end
+end
+
+
+task :default => :spec
 
 task :add_user do
 	STDOUT.puts "What is your github username?"
@@ -53,16 +91,12 @@ task :add_user do
 			else
 		end
 	end
-
 end
 
 task :add_repo do
 	STDOUT.puts "Which github repository would you like to integrate? (eg. bfa_oms) "
 	repo = STDIN.gets.strip
 	yml_file = YAML.load_file('conf.yml')
-	# puts yml_file.inspect
-	# puts yml_file["repos"].inspect
-	# puts yml_file["repos"][repo].inspect
 	if yml_file["repos"][repo]
 		STDOUT.print "This repo exists in the configuration file. Press 'y' to edit the repo, or any other key to exit: "
 		edit = STDIN.gets.strip
@@ -101,5 +135,31 @@ task :add_repo do
 			else
 		end
 	end
+end
 
+task :edit_user do
+	STDOUT.puts "Which user would you like to edit?"
+	username = STDIN.gets.strip
+	yml_file = YAML.load_file('conf.yml')
+
+	if yml_file["users"][username]
+		#display variables associated with user
+		prompt_edit("users", username, yml_file)	
+	else 
+		puts "This username does not exist. To create it, run rake add_user."
+	end
+end
+
+task :edit_repo do
+	STDOUT.puts "Which repo would you like to edit?"
+	repo = STDIN.gets.strip
+	yml_file = YAML.load_file('conf.yml')
+
+	#check if the user exists
+	if yml_file["repos"][repo]
+		#display variables associated with user
+		prompt_edit("repos", repo, yml_file)
+	else
+		puts "This repo does not exist. To create it, run rake add_repo."
+	end
 end

@@ -1,11 +1,11 @@
 ---
 users:
-  init:
+  init: 
   burricks:
     oauth_token: d8d6df7723f9f479f9b910777db85b6f555d175cade9ec5fc2e7162bb545607a
     api_key: a9acec5b725b2ac646aaf7ae746493c9
 repos:
-  init:
+  init: 
   github-trello:
     board_id: 53d2aa38b0bc99633bd659fa
     on_doing:
@@ -15,5 +15,5 @@ repos:
       move_to: 53d2aa38b0bc99633bd659fc
       archive: true
     on_done:
-      move_to: 53d2aa38b0bc99633bd659fd      
+      move_to: 53d2aa38b0bc99633bd659fd
       archive: true
