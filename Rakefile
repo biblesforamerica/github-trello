@@ -215,11 +215,10 @@ task :delete_user do
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
-		yml_file["users"].delete(user)
-		File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+		deleted = yml_file["users"].delete(user)
+		File.open('conf.yml', 'w') { |f| YAML.dump(deleted, f)}
 		puts "User deleted"
 	else end 
-		puts yml_file
 end
 
 
