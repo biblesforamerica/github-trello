@@ -89,7 +89,7 @@ module GithubTrello
       config = YAML::load(File.read(path))
       config
       puts "hello"
-      hello
+      "hello"
     end
 
     post '/' do
