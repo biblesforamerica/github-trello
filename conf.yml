@@ -6,14 +6,3 @@ users:
     api_key: a9acec5b725b2ac646aaf7ae746493c9
 repos:
   init: 
-  github-trello:
-    board_id: 53d2aa38b0bc99633bd659fa
-    on_doing:
-      move_to: 53d2aa38b0bc99633bd659fb
-      archive: true
-    on_review:
-      move_to: 53d2aa38b0bc99633bd659fc
-      archive: true
-    on_done:
-      move_to: 53d2aa38b0bc99633bd659fd
-      archive: true

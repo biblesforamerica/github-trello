@@ -58,13 +58,30 @@ def edit_field(key_type, key_name, field_name, yml_file)
 		else end
 end
 
-
 task :default => :spec
+
+task :user?, :username do |t, args|
+	yml_file = YAML.load_file('conf.yml')
+	username = args[:username]
+	if yml_file["users"][username]
+		puts true
+	else puts false
+	end
+end
+
+task :repo?, :repo do |t, args|
+	yml_file = YAML.load_file('conf.yml')
+	repo = args[:repo]
+	if yml_file["repos"][repo]
+		puts true
+	else puts false
+	end
+end
 
 task :add_user do
 	STDOUT.puts "What is your github username?"
 	username = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
+	yml_file = YAML.load_file('conf.yml') 
 	if yml_file["users"][username]
 		STDOUT.puts "This username exists in the configuration file. Press 'y' to edit the username, or any other key to cancel"
 		edit = STDIN.gets.strip
@@ -163,3 +180,4 @@ task :edit_repo do
 		puts "This repo does not exist. To create it, run rake add_repo."
 	end
 end
+
