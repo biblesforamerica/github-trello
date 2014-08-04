@@ -210,6 +210,7 @@ task :delete_user do
 	STDOUT.puts "Which user would you like to delete?"
 	user = STDIN.gets.strip
 	yml_file = YAML.load_file('conf.yml')
+	puts yml_file
 	print "Are you sure you want to delete the user information for " +user+"? If so, press 'y'. To cancel, press any other key: "
 	response = STDIN.gets.strip
 	if response == "y" 
@@ -218,6 +219,7 @@ task :delete_user do
 		File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
 		puts "User deleted"
 	else end 
+		puts yml_file
 end
 
 
