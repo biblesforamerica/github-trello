@@ -85,6 +85,7 @@ module GithubTrello
      end
 
     get '/' do
+      path = File.expand_path(File.dirname(__FILE__) + "/../../conf.yml")
       config = YAML::load(File.read(path))
       puts config
     end
