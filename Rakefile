@@ -153,9 +153,9 @@ task :add_repo do
 				save = STDIN.gets.strip
 				if save == "y" then 
 					yml_file["repos"][repo] = { "board_id" => board, 
-						"on_doing" => {"move_to" => doing, "archive" => true},
-						"on_review" => {"move_to" => review, "archive" => true},
-						"on_done" => {"move_to" => done, "archive" => true}
+						"on_doing" => doing,
+						"on_review" => review,
+						"on_done" => done
 						}
 					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
 					puts "Saved"

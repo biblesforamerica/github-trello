@@ -64,9 +64,9 @@ module GithubTrello
           to_update = {}
           # Determine the action to take
           move_to = case match[2].downcase
-            when "doing" then config["repos"][repo]["on_doing"]["move_to"]
-            when "review" then config["repos"][repo]["on_review"]["move_to"]
-            when "done" then config["repos"][repo]["on_done"]["move_to"]
+            when "doing" then config["repos"][repo]["on_doing"]
+            when "review" then config["repos"][repo]["on_review"]
+            when "done" then config["repos"][repo]["on_done"]
           end
 
            #move_to = update_config["move_to"]
