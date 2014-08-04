@@ -85,8 +85,8 @@ module GithubTrello
      end
 
     get '/' do
-      "Hello World!"
-      "That's all!"
+      config = YAML::load(File.read(path))
+      puts config
     end
 
     post '/' do
