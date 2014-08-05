@@ -15,7 +15,7 @@ module GithubTrello
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
       #path = File.expand_path(File.dirname(__FILE__) + "/../../conf.yml")
-      #config = YAML::load(File.read(path))
+      config = YAML::load(File.read(path))
       repo = payload["repository"]["name"]
       unless pg.userTable[committer] #unless config["users"][committer]
         puts "[ERROR] Github username not recognized. Run rake add_user"
@@ -106,10 +106,10 @@ module GithubTrello
       puts payload
     end
 
-  #   def self.config=(config)
-  #     @config = config
-  #   end
+    def self.config=(config)
+      @config = config
+    end
 
-  #   def self.config; @config end
+    def self.config; @config end
    end
 end
