@@ -21,7 +21,7 @@ module GithubTrello
         puts "[ERROR] Github username not recognized. Run rake add_user"
       end
 
-      unless pg.userTable[repo] #unless config["repos"][repo]
+      unless pg.repoTable[repo] #unless config["repos"][repo]
         puts "[ERROR] Github repo not recognized. Run rake add_repo"
       end
 
