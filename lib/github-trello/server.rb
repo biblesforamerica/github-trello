@@ -49,11 +49,8 @@ module GithubTrello
       payload["commits"].each do |commit|
         # Figure out the card short id
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        puts match[3]
         next unless match and match[3].to_i > 0
-        puts commit
         results = http.get_card(board_id, match[3].to_i)
-        puts results
         unless results
           puts "[ERROR] Cannot find card matching ID #{match[3]}"
           next
@@ -61,7 +58,6 @@ module GithubTrello
 
         results = JSON.parse(results)
         puts "look here!"
-        puts results
 
         # Add the commit comment
         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
@@ -96,6 +92,7 @@ module GithubTrello
 
       ""
      end
+   end
 
     get '/' do
       pg = GithubTrello::Postgres.new
