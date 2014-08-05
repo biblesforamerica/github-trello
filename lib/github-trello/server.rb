@@ -47,7 +47,6 @@ module GithubTrello
       payload["commits"].each do |commit|
         # Figure out the card short id
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        puts match
         puts match[1]
         puts match[2]
         puts match[3]
