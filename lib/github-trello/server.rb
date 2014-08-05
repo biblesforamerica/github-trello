@@ -47,7 +47,7 @@ module GithubTrello
 
       puts payload["commits"].inspect
       payload["commits"].each do |commit|
-        Figure out the card short id
+        # Figure out the card short id
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
         next unless match and match[3].to_i > 0
         results = http.get_card(board_id, match[3].to_i)
