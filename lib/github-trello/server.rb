@@ -46,27 +46,26 @@ module GithubTrello
       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
       puts payload["commits"].inspect
+      payload["commits"].each do |commit|
+        Figure out the card short id
+        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+        next unless match and match[3].to_i > 0
+        results = http.get_card(board_id, match[3].to_i)
+        unless results
+          puts "[ERROR] Cannot find card matching ID #{match[3]}"
+          next
+        end
 
-       payload["commits"].each do |commit|
-        # Figure out the card short id
-        # match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        # next unless match and match[3].to_i > 0
-        # results = http.get_card(board_id, match[3].to_i)
-        # unless results
-        #   puts "[ERROR] Cannot find card matching ID #{match[3]}"
-        #   next
-        # end
-
-        # results = JSON.parse(results)
+        results = JSON.parse(results)
         puts "look here!"
 
-#         # Add the commit comment
-#         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-#         # message = "hello"
-#         message.gsub!(match[1], "")
-#         message.gsub!(/\(\)$/, "")
+        # Add the commit comment
+        message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
+        # message = "hello"
+        message.gsub!(match[1], "")
+        message.gsub!(/\(\)$/, "")
 
-#         http.add_comment(results["id"], message)
+        http.add_comment(results["id"], message)
 
 #         if match[2].downcase == "archive"
 #           then to_update = {:closed => true}
@@ -91,10 +90,9 @@ module GithubTrello
 #         end
 #       end
 
-#       ""
       end
 
-      puts "this should work!"
+      "" #line needed so that sinatra can happily return a string
     end
 
     get '/' do
