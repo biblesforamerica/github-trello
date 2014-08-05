@@ -18,7 +18,7 @@ module GithubTrello
     end
 
     def addRepo(repo, board_id, on_doing, on_review, on_done)
-      @conn.exec("INSERT INTO repos VALUES (\'"+repo.to_s+"\',"+board_id.to_s+", "+on_doing.to_s+", "+on_review.to_s+", "+on_done.to_s+");")
+      @conn.exec("INSERT INTO repos VALUES (\'"+repo.to_s+"\',\'"+board_id.to_s+"\', \'"+on_doing.to_s+"\', \'"+on_review.to_s+"\', \'"+on_done.to_s+"\');")
     end
 
     ## READ
