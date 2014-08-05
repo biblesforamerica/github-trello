@@ -45,9 +45,9 @@ module GithubTrello
 
       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
-      puts payload["commits"]
+      puts "hello"+payload["commits"]
 
-#       payload["commits"].each do |commit|
+       payload["commits"].each do |commit|
 #         # Figure out the card short id
 #         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
 #         next unless match and match[3].to_i > 0
@@ -92,7 +92,7 @@ module GithubTrello
 #       end
 
 #       ""
-#      end
+      end
     end
 
 #     get '/' do
