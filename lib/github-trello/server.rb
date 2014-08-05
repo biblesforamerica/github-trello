@@ -58,7 +58,7 @@ module GithubTrello
         # end
 
         # results = JSON.parse(results)
-        puts "look here!"
+        "look here!"
 
 #         # Add the commit comment
 #         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
