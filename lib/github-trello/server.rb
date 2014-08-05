@@ -14,7 +14,7 @@ module GithubTrello
       pg.connect
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
-      #path = File.expand_path(File.dirname(__FILE__) + "/../../conf.yml")
+      path = File.expand_path(File.dirname(__FILE__) + "/../../conf.yml")
       config = YAML::load(File.read(path))
       repo = payload["repository"]["name"]
       unless pg.userTable[committer] #unless config["users"][committer]
