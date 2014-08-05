@@ -89,7 +89,7 @@ module GithubTrello
     get '/' do
       pg = GithubTrello::Postgres.new
       pg.connect
-      pg.userTable
+      pg.userTable.inspect
     end
 
     post '/' do
