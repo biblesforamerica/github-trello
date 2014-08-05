@@ -18,5 +18,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "sinatra", "~>1.3.2"
 
   s.files        = Dir.glob("lib/**/*") + %w[MIT-LICENSE README.md Rakefile]
-  s.executables  = ["trello-web"]
 end
