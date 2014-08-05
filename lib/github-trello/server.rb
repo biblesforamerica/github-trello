@@ -89,7 +89,7 @@ module GithubTrello
     get '/' do
       pg = GithubTrello::Postgres.new
       pg.connect
-      puts pg.userTable
+      pg.userTable
     end
 
     post '/' do
