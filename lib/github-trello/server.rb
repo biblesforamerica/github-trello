@@ -111,5 +111,5 @@ module GithubTrello
   #   end
 
   #   def self.config; @config end
-  # end
+   end
 end
