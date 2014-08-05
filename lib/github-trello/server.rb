@@ -34,9 +34,6 @@ module GithubTrello
       end
 
       branch = payload["ref"].gsub("refs/heads/", "")
-    end
-  end
-end
 
       # if config["blacklist_branches"] and config["blacklist_branches"].include?(branch)
       #   return
@@ -96,7 +93,7 @@ end
 
 #       ""
 #      end
-#    end
+    end
 
 #     get '/' do
 #       pg = GithubTrello::Postgres.new
@@ -109,5 +106,5 @@ end
 #       puts payload
 #     end
 
-#   end
-# end
+  end
+end
