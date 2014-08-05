@@ -46,11 +46,14 @@ module GithubTrello
       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
       puts payload["commits"].inspect
-      payload["commits"].each do |commit|
-        # Figure out the card short id
-        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        next unless match and match[3].to_i > 0
-        results = http.get_card(board_id, match[3].to_i)
+      # payload["commits"].each do |commit|
+      #   # Figure out the card short id
+      #   match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+      #   next unless match and match[3].to_i > 0
+
+        #get the card
+        #results = http.get_card(board_id, match[3].to_i)
+        results = http.get_card(board_id, 3)
         unless results
           puts "[ERROR] Cannot find card matching ID #{match[3]}"
           next
@@ -60,8 +63,8 @@ module GithubTrello
         puts "look here!"
 
         # Add the commit comment
-        message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        # message = "hello"
+        #message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
+        message = "hello"
         message.gsub!(match[1], "")
         message.gsub!(/\(\)$/, "")
 
@@ -90,7 +93,7 @@ module GithubTrello
 #         end
 #       end
 
-      end
+      # end
 
       "" #line needed so that sinatra can happily return a string
     end
