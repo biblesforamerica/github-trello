@@ -105,10 +105,5 @@ module GithubTrello
       puts payload
     end
 
-    # def self.config=(config)
-    #   @config = config
-    # end
-
-    # def self.config; @config end
-   end
+  end
 end
