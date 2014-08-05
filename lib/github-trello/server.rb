@@ -43,9 +43,9 @@ module GithubTrello
 
       # http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
 
-#       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
+      http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
-#       puts payload["commits"]
+      puts payload["commits"]
 
 #       payload["commits"].each do |commit|
 #         # Figure out the card short id
