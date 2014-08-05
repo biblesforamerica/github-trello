@@ -14,7 +14,7 @@ module GithubTrello
 
     ## CREATE
     def addUser(username, oauth_token, api_key)
-      @conn.exec("INSERT INTO usernames VALUES (\'"+username.to_s+"\',"+oauth_token.to_s+", "+api_key.to_s+");")
+      @conn.exec("INSERT INTO usernames VALUES (\'"+username.to_s+"\',\'"+oauth_token.to_s+"\', \'"+api_key.to_s+"\');")
     end
 
     def addRepo(repo, board_id, on_doing, on_review, on_done)
