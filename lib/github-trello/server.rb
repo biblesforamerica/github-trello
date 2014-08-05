@@ -46,6 +46,11 @@ module GithubTrello
       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
       puts payload["commits"].inspect
+      array = ["hello", "everybody", "praise", "the", "Lord!"]
+      array.each do |a|
+        print "yay! "
+        print a
+      end
       # payload["commits"].each do |commit|
       #   # Figure out the card short id
       #   match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
@@ -68,7 +73,7 @@ module GithubTrello
         # message.gsub!(match[1], "")
         # message.gsub!(/\(\)$/, "")
 
-        http.add_comment(results["id"], message)
+        #http.add_comment(results["id"], message)
 
 #         if match[2].downcase == "archive"
 #           then to_update = {:closed => true}
