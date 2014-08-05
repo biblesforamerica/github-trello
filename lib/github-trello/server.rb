@@ -65,8 +65,8 @@ module GithubTrello
         # Add the commit comment
         #message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
         message = "hello"
-        message.gsub!(match[1], "")
-        message.gsub!(/\(\)$/, "")
+        # message.gsub!(match[1], "")
+        # message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
