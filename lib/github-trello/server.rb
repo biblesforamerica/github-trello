@@ -34,6 +34,10 @@ module GithubTrello
       end
 
       branch = payload["ref"].gsub("refs/heads/", "")
+    end
+  end
+end
+
       # if config["blacklist_branches"] and config["blacklist_branches"].include?(branch)
       #   return
       # elsif config["whitelist_branches"] and !config["whitelist_branches"].include?(branch)
@@ -42,68 +46,68 @@ module GithubTrello
 
       # http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
 
-      http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
+#       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
-      puts payload["commits"]
+#       puts payload["commits"]
 
-      payload["commits"].each do |commit|
-        # Figure out the card short id
-        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        next unless match and match[3].to_i > 0
-        results = http.get_card(board_id, match[3].to_i)
-        unless results
-          puts "[ERROR] Cannot find card matching ID #{match[3]}"
-          next
-        end
+#       payload["commits"].each do |commit|
+#         # Figure out the card short id
+#         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+#         next unless match and match[3].to_i > 0
+#         results = http.get_card(board_id, match[3].to_i)
+#         unless results
+#           puts "[ERROR] Cannot find card matching ID #{match[3]}"
+#           next
+#         end
 
-        results = JSON.parse(results)
-        puts "look here!"
+#         results = JSON.parse(results)
+#         puts "look here!"
 
-        # Add the commit comment
-        message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        # message = "hello"
-        message.gsub!(match[1], "")
-        message.gsub!(/\(\)$/, "")
+#         # Add the commit comment
+#         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
+#         # message = "hello"
+#         message.gsub!(match[1], "")
+#         message.gsub!(/\(\)$/, "")
 
-        http.add_comment(results["id"], message)
+#         http.add_comment(results["id"], message)
 
-        if match[2].downcase == "archive"
-          then to_update = {:closed => true}
-        else
-          to_update = {}
-          # Determine the action to take
-          move_to = case match[2].downcase
-            when "doing" then pg.repoTable[repo]["on_doing"] #config["repos"][repo]["on_doing"]
-            when "review" then pg.repoTable[repo]["on_review"] #config["repos"][repo]["on_review"]
-            when "done" then pg.repoTable[repo]["on_done"] #config["repos"][repo]["on_done"]
-          end
+#         if match[2].downcase == "archive"
+#           then to_update = {:closed => true}
+#         else
+#           to_update = {}
+#           # Determine the action to take
+#           move_to = case match[2].downcase
+#             when "doing" then pg.repoTable[repo]["on_doing"] #config["repos"][repo]["on_doing"]
+#             when "review" then pg.repoTable[repo]["on_review"] #config["repos"][repo]["on_review"]
+#             when "done" then pg.repoTable[repo]["on_done"] #config["repos"][repo]["on_done"]
+#           end
 
-           #move_to = update_config["move_to"]
+#            #move_to = update_config["move_to"]
 
-          unless results["idList"] == move_to
-            to_update[:idList] = move_to
-          end
-        end
+#           unless results["idList"] == move_to
+#             to_update[:idList] = move_to
+#           end
+#         end
 
-        unless to_update.empty?
-          http.update_card(results["id"], to_update)
-        end
-      end
+#         unless to_update.empty?
+#           http.update_card(results["id"], to_update)
+#         end
+#       end
 
-      ""
-     end
-   end
+#       ""
+#      end
+#    end
 
-    get '/' do
-      pg = GithubTrello::Postgres.new
-      pg.connect
-      pg.userTable.inspect
-    end
+#     get '/' do
+#       pg = GithubTrello::Postgres.new
+#       pg.connect
+#       pg.userTable.inspect
+#     end
 
-    post '/' do
-      payload = JSON.parse(params[:payload])
-      puts payload
-    end
+#     post '/' do
+#       payload = JSON.parse(params[:payload])
+#       puts payload
+#     end
 
-  end
-end
+#   end
+# end
