@@ -58,7 +58,7 @@ module GithubTrello
         # end
 
         # results = JSON.parse(results)
-        "look here!"
+        puts "look here!"
 
 #         # Add the commit comment
 #         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
@@ -93,18 +93,20 @@ module GithubTrello
 
 #       ""
       end
+
+      puts "this should work!"
     end
 
-#     get '/' do
-#       pg = GithubTrello::Postgres.new
-#       pg.connect
-#       pg.userTable.inspect
-#     end
+    get '/' do
+      pg = GithubTrello::Postgres.new
+      pg.connect
+      pg.userTable.inspect
+    end
 
-#     post '/' do
-#       payload = JSON.parse(params[:payload])
-#       puts payload
-#     end
+    post '/' do
+      payload = JSON.parse(params[:payload])
+      puts payload
+    end
 
   end
 end
