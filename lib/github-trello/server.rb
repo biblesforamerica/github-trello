@@ -9,7 +9,7 @@ require "yaml"
 module GithubTrello
   class Server < Sinatra::Base
     post "/posthook" do
-      #connect to database  tesing
+      #connect to database  teasing
       pg = GithubTrello::Postgres.new
       pg.connect
       payload = JSON.parse(params[:payload])
