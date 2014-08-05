@@ -1,10 +1,10 @@
 require "json"
 require "sinatra/base"
 require "github-trello/version"
-require "github-trello/http"
 require "github-trello/postgres"
+require "github-trello/http"
 require "yaml"
-require "pg"
+
 
 module GithubTrello
   class Server < Sinatra::Base
