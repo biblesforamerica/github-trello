@@ -88,7 +88,7 @@ module GithubTrello
 
     get '/' do
       pg = GithubTrello::Postgres.new
-      hi = pg.connect
+      pg.connect
       puts pg.userTable
     end
 
