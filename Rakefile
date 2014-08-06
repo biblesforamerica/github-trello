@@ -34,9 +34,11 @@ def prompt_edit(key_type, key_name)
 	begin 
 		puts "Please enter an integer value corresponding to the field you would like to edit, or 0 to cancel:"
 		puts "0) Cancel"
-		array.each_with_index do |k, i|
-			puts (i + 1).to_s+") "+k.to_s+": "+yml_file[key_type][key_name][k].to_s
-		end
+		# if key_type == "users" then 
+			display(key_type, key_name)
+		# array.each_with_index do |k, i|
+		# 	puts (i + 1).to_s+") "+k.to_s+": "+@pg.userTable[key_name][k].to_s
+		# end
 		puts "Which field would you like to edit? (eg. 1) \n"
 		field_no = STDIN.gets.strip
 	end while field_no.to_i < 0 || field_no.to_i > array.size + 1
