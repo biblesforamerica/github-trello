@@ -52,10 +52,13 @@ module GithubTrello
         print "yay! "
         print a
       end
+
+      commits = payload["commits"]
+      commits.each do |commit|
       # payload["commits"].each do |commit|
-      #   # Figure out the card short id
-      #   match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-      #   next unless match and match[3].to_i > 0
+        # Figure out the card short id
+        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+        next unless match and match[3].to_i > 0
 
         #get the card
         #results = http.get_card(board_id, match[3].to_i)
@@ -74,7 +77,7 @@ module GithubTrello
         # message.gsub!(match[1], "")
         # message.gsub!(/\(\)$/, "")
 
-        #http.add_comment(results["id"], message)
+        http.add_comment(results["id"], message)
 
 #         if match[2].downcase == "archive"
 #           then to_update = {:closed => true}
@@ -99,7 +102,7 @@ module GithubTrello
 #         end
 #       end
 
-      # end
+       end
 
       "" #line needed so that sinatra can happily return a string
     end
