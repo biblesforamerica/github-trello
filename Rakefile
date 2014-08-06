@@ -102,10 +102,10 @@ task :show_repo, :repo do |t, args|
 end
 
 task :add_user do
+	connect
 	STDOUT.puts "What is your github username?"
 	username = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml') 
-	if yml_file["users"][username]
+	if @pg.userTable[username]
 		puts "This username exists in the configuration file. To edit it, run: \n  heroku run rake edit_user --app trello-github-integrate"
 	else 
 		STDOUT.puts "Your username will be added to the configuration file. Press 'y' to continue, or any other key to exit"
@@ -122,8 +122,7 @@ task :add_user do
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["users"][username] = {"oauth_token" => token, "api_key" => key}
-					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+					@pg.addUser(username, token, key)
 					puts "Saved"
 				else end
 			else
