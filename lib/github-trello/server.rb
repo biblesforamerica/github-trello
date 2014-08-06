@@ -1,109 +1,92 @@
 require "json"
 require "sinatra/base"
 require "github-trello/version"
+require "github-trello/postgres"
 require "github-trello/http"
 require "yaml"
+
 
 module GithubTrello
   class Server < Sinatra::Base
     post "/posthook" do
+
+      #connect to database  
+      pg = GithubTrello::Postgres.new
+      pg.connect
+
+      #load data from payload
       payload = JSON.parse(params[:payload])
       committer = payload["head_commit"]["committer"]["username"]
-      path = File.expand_path(File.dirname(__FILE__) + "/../../conf.yml")
-      config = YAML::load(File.read(path))
       repo = payload["repository"]["name"]
-      unless config["users"][committer]
+      unless pg.userTable[committer] 
         puts "[ERROR] Github username not recognized. Run rake add_user"
+        return
       end
-
-      unless config["repos"][repo]
+      unless pg.repoTable[repo] 
         puts "[ERROR] Github repo not recognized. Run rake add_repo"
+        return
       end
+      branch = payload["ref"].gsub("refs/heads/", "")
 
-      #deploy comment
-
-      board_id = config["repos"][repo]["board_id"]
+      #load board_id from the database
+      board_id = pg.repoTable[repo]["board_id"] 
       unless board_id
         puts "[ERROR] Commit from #{payload["repository"]["name"]} but no board_id entry found in config. Run rake update_repo"
         return
       end
 
-      branch = payload["ref"].gsub("refs/heads/", "")
-      if config["blacklist_branches"] and config["blacklist_branches"].include?(branch)
-        return
-      elsif config["whitelist_branches"] and !config["whitelist_branches"].include?(branch)
-        return
-      end
+      #connect to Trello's server
+      http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
-      http = GithubTrello::HTTP.new(config["users"][committer]["oauth_token"], config["users"][committer]["api_key"])
-
-      payload["commits"].each do |commit|
-        # Figure out the card short id
-        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+      #search each commit from the payload for a flag to make a comment on a Trello card
+      commits = payload["commits"].each do |commit|
+        match = commit["message"].match(/((card|doing|review|done|archive)e?s? \D?([0-9]+))/i)
         next unless match and match[3].to_i > 0
-
         results = http.get_card(board_id, match[3].to_i)
         unless results
           puts "[ERROR] Cannot find card matching ID #{match[3]}"
           next
         end
-
         results = JSON.parse(results)
 
         # Add the commit comment
         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        # message = "hello"
         message.gsub!(match[1], "")
         message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
+        #move card if doing, review, done, or archive was flagged in commit message
         if match[2].downcase == "archive"
-          then to_update = {:closed => true}
+         then to_update = {:closed => true}
         else
           to_update = {}
           # Determine the action to take
           move_to = case match[2].downcase
-            when "doing" then config["repos"][repo]["on_doing"]
-            when "review" then config["repos"][repo]["on_review"]
-            when "done" then config["repos"][repo]["on_done"]
+            when "doing" then pg.repoTable[repo]["on_doing"] #config["repos"][repo]["on_doing"]
+            when "review" then pg.repoTable[repo]["on_review"] #config["repos"][repo]["on_review"]
+            when "done" then pg.repoTable[repo]["on_done"] #config["repos"][repo]["on_done"]
           end
 
-           #move_to = update_config["move_to"]
-
+          #only move card if destination is not equal to origin
           unless results["idList"] == move_to
             to_update[:idList] = move_to
           end
+
+          #move card
+          unless to_update.empty?
+             http.update_card(results["id"], to_update)
+          end
         end
 
-        unless to_update.empty?
-          http.update_card(results["id"], to_update)
-        end
-      end
+       end
 
-      ""
-     end
+      "" #line needed so that sinatra can return a string
+    end
 
     get '/' do
-      path = File.expand_path(File.dirname(__FILE__) + "/../../conf.yml")
-      config = YAML::load(File.read(path)).inspect
-      # hi = YAML.load_file('/../../conf.yml')
-      # hello = YAML.load_file('/../../conf.yml').inspect
-      # puts "hi "+hi
-      # puts "hello: "+hello
-      puts config
-      "hello"
+      ""
     end
 
-    post '/' do
-      payload = JSON.parse(params[:payload])
-      puts payload
-    end
-
-    def self.config=(config)
-      @config = config
-    end
-
-    def self.config; @config end
   end
 end

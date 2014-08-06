@@ -5,9 +5,15 @@ require "rake"
 require "rspec"
 require "rspec/core/rake_task"
 require "yaml"
+require "github-trello/postgres"
 
 RSpec::Core::RakeTask.new("spec") do |spec|
   spec.pattern = "spec/**/*_spec.rb"
+end
+
+def connect
+	@pg = GithubTrello::Postgres.new
+	@pg.connect
 end
 
 def check_file (file, string)
@@ -17,10 +23,10 @@ def check_file (file, string)
 	false
 end
 
-def prompt_edit(key_type, key_name, yml_file)
-	if key_type == "users"
+def prompt_edit(key_type, key_name)
+	if key_type == "user"
 		then array = ["oauth_token", "api_key"]
-		elsif key_type == "repos"
+		elsif key_type == "repo"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
 		else print "Error: key_type not recognized" 
 	end
@@ -28,46 +34,49 @@ def prompt_edit(key_type, key_name, yml_file)
 	begin 
 		puts "Please enter an integer value corresponding to the field you would like to edit, or 0 to cancel:"
 		puts "0) Cancel"
-		array.each_with_index do |k, i|
-			puts (i + 1).to_s+") "+k.to_s+": "+yml_file[key_type][key_name][k].to_s
-		end
+		# if key_type == "users" then 
+			display(key_type, key_name)
+		# array.each_with_index do |k, i|
+		# 	puts (i + 1).to_s+") "+k.to_s+": "+@pg.userTable[key_name][k].to_s
+		# end
 		puts "Which field would you like to edit? (eg. 1) \n"
 		field_no = STDIN.gets.strip
-	end while field_no.to_i < 0 || field_no.to_i > array.size + 1
+	end while (field_no.to_i < 0 || field_no.to_i > array.size)
 
 	unless field_no == "0"
 		field = array.at(field_no.to_i - 1)
-		edit_field(key_type, key_name, field, yml_file)
+		edit_field(key_type, key_name, field)
 	end
 
 	puts "Canceled"
 end
 
-def edit_field(key_type, key_name, field_name, yml_file)
-		print "Please enter a new "+ field_name + ": "
+def edit_field(key_type, key_name, field_name)
+		print "Please enter a new "+ field_name + " value: "
 		ot = STDIN.gets.strip
 		print "Press y to save or any other key to cancel: "
 		if STDIN.gets.strip == "y" 
 		then 
-			yml_file[key_type][key_name][field_name] = ot
-			File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+			@pg.update(key_type, key_name, field_name, ot)
 			print "To make any further edits, press y, to cancel press any other key: "
 			if STDIN.gets.strip == "y" 
-			then prompt_edit(key_type, key_name, yml_file)
+			then prompt_edit(key_type, key_name)
 			else end
 		else end
 end
 
-def display(key_type, key_name, yml_file)
-	if key_type == "users"
+def display(key_type, key_name)
+	if key_type == "user"
 		then array = ["oauth_token", "api_key"]
-		elsif key_type == "repos"
+			array.each_with_index do |k, i|
+				puts (i + 1).to_s+") "+k.to_s+": "+@pg.userTable[key_name][k].to_s
+			end
+		elsif key_type == "repo"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
+			array.each_with_index do |k, i| 
+			puts (i + 1).to_s+") "+k.to_s+": "+@pg.repoTable[key_name][k].to_s
+			end
 		else print "Error: key_type not recognized" 
-	end
-
-	array.each_with_index do |k, i|
-		puts (i + 1).to_s+") "+k.to_s+": "+yml_file[key_type][key_name][k].to_s
 	end
 end
 
@@ -76,28 +85,28 @@ end
 task :default => :spec
 
 task :show_user, :username do |t, args|
-	yml_file = YAML.load_file('conf.yml')
+	connect
 	username = args[:username]
-	if yml_file["users"][username]
-		display("users", username, yml_file)
+	if @pg.userTable[username]
+		display("user", username)
 	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
 	end
 end
 
 task :show_repo, :repo do |t, args|
-	yml_file = YAML.load_file('conf.yml')
+	connect
 	repo = args[:repo]
-	if yml_file["repos"][repo]
-		display("repos", repo, yml_file)
+	if @pg.repoTable[repo]
+		display("repo", repo)
 	else puts "This repo does not exist in the configuration file. To add it, run: \n  heroku run rake add_repo --app trello-github-integrate"
 	end
 end
 
 task :add_user do
+	connect
 	STDOUT.puts "What is your github username?"
 	username = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml') 
-	if yml_file["users"][username]
+	if @pg.userTable[username]
 		puts "This username exists in the configuration file. To edit it, run: \n  heroku run rake edit_user --app trello-github-integrate"
 	else 
 		STDOUT.puts "Your username will be added to the configuration file. Press 'y' to continue, or any other key to exit"
@@ -107,15 +116,14 @@ task :add_user do
 				key = STDIN.gets.strip
 				puts "\nNow, input your token. This can be found at: https://trello.com/1/authorize?response_type=token&name=Trello+Github+Integration&scope=read,write&expiration=never&key="+key
 				token = STDIN.gets.strip
-				puts "Thank you for your cooperation. Your input values appear below - please review them"
+				puts "Thank you for your cooperation. Please review your input values"
 				puts "username: "+username+"\n"+ 
 				"key: "+key+"\n"+
 				"token: "+token
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["users"][username] = {"oauth_token" => token, "api_key" => key}
-					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+					@pg.addUser(username, token, key)
 					puts "Saved"
 				else end
 			else
@@ -124,10 +132,10 @@ task :add_user do
 end
 
 task :add_repo do
+	connect
 	STDOUT.puts "Which github repository would you like to integrate? (eg. bfa_oms) "
 	repo = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-	if yml_file["repos"][repo]
+	if @pg.repoTable[repo]
 		puts "This repository exists in the configuration file. To edit it, run: \n  heroku run rake edit_repo --app trello-github-integrate"
 	else 
 		STDOUT.print "This repo will be added to the configuration file. Continue (y) or exit (any other key): "
@@ -142,7 +150,7 @@ task :add_repo do
 				review = STDIN.gets.strip
 				print "Done: "
 				done = STDIN.gets.strip
-				puts "Thank you for your cooperation. Your input values appear below - please review them"
+				puts "Thank you for your cooperation. Please review your input values"
 				puts 
 				"repository name: "+repo+"\n"+
 				"board id: "+board+"\n"+
@@ -152,12 +160,7 @@ task :add_repo do
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["repos"][repo] = { "board_id" => board, 
-						"on_doing" => doing,
-						"on_review" => review,
-						"on_done" => done
-						}
-					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+					@pg.addRepo(repo, board, doing, review, done)
 					puts "Saved"
 				else end
 			else
@@ -166,27 +169,22 @@ task :add_repo do
 end
 
 task :edit_user do
+	connect 
 	STDOUT.puts "Which user would you like to edit?"
 	username = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-
-	if yml_file["users"][username]
-		#display variables associated with user
-		prompt_edit("users", username, yml_file)	
+	if @pg.userTable[username]
+		prompt_edit("user", username)	
 	else 
 		puts "This username does not exist. To create it, run rake add_user."
 	end
 end
 
 task :edit_repo do
+	connect
 	STDOUT.puts "Which repo would you like to edit?"
 	repo = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-
-	#check if the user exists
-	if yml_file["repos"][repo]
-		#display variables associated with user
-		prompt_edit("repos", repo, yml_file)
+	if @pg.repoTable[repo]
+		prompt_edit("repo", repo)
 	else
 		puts "This repo does not exist. To create it, run rake add_repo."
 	end
