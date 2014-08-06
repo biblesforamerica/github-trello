@@ -62,7 +62,7 @@ module GithubTrello
 
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
         # next unless match and match[3].to_i > 0
-        puts "hello"+match[3]
+        # puts "hello"+match[3]
 
         #get the cardsd
         # results = http.get_card(board_id, 4)
@@ -75,8 +75,8 @@ module GithubTrello
 
         # Add the commit comments
         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        # message.gsub!(match[1], "")
-        # message.gsub!(/\(\)$/, "")
+        message.gsub!(match[1], "")
+        message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
