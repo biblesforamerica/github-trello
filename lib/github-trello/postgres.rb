@@ -46,7 +46,7 @@ module GithubTrello
 
     ## UPDATE
     def update(table, row, column, value)
-      @conn.exec("UPDATE "+table.to_s+"s SET "+column.to_s+" = "+value.to_s+" WHERE "+table+" = \'"+row.to_s+"\';")
+      @conn.exec("UPDATE "+table.to_s+"s SET "+column.to_s+" = \'"+value.to_s+"\'' WHERE "+table+" = \'"+row.to_s+"\';")
     end
 
     def updateUser(row, column, value)
