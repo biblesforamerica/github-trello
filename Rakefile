@@ -191,30 +191,27 @@ task :edit_repo do
 end
 
 task :delete_repo do
+	connect
 	STDOUT.puts "Which repo would you like to delete?"
 	repo = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
 	print "Are you sure you want to delete the repository information for " +repo+"? If so, press 'y'. To cancel, press any other key: "
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
-		yml_file["repos"].delete(repo)
-		File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+		pg.deleteRepo(repo)
 		puts "Repo deleted"
 	else end 
 end
 
 task :delete_user do
+	connect
 	STDOUT.puts "Which user would you like to delete?"
 	user = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-	puts yml_file
 	print "Are you sure you want to delete the user information for " +user+"? If so, press 'y'. To cancel, press any other key: "
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
-		yml_file["users"].delete(user)
-		File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+		pg.deleteUser(user)
 		puts "User deleted"
 	else end 
 end
