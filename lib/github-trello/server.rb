@@ -56,7 +56,7 @@ module GithubTrello
       commits = payload["commits"]
       commits.each do |commit|
       # payload["commits"].each do |commit|
-        # Figure out the card short id
+        # Figure out the card short id toggle
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
         next unless match and match[3].to_i > 0
 
