@@ -60,7 +60,7 @@ module GithubTrello
 
         #I THINK THE PROBLEM IS IN THE MATCH STATEMENT RIGHT HERE 
 
-        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+        match = commit["message"].match(/((card|doing|review|done|archive)e?s? \D?([0-9]+))/i)
         # unless match and match[3].to_i > 0
         #   next
         # end
