@@ -41,7 +41,7 @@ def prompt_edit(key_type, key_name)
 		# end
 		puts "Which field would you like to edit? (eg. 1) \n"
 		field_no = STDIN.gets.strip
-	end while field_no.to_i < 0 || field_no.to_i > array.size + 1
+	end while (field_no.to_i < 0 || field_no.to_i > array.size + 1)
 
 	unless field_no == "0"
 		field = array.at(field_no.to_i - 1)
