@@ -62,6 +62,7 @@ module GithubTrello
 
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
         # next unless match and match[3].to_i > 0
+        puts "hello"+match[3]
 
         #get the card
         # results = http.get_card(board_id, 4)
