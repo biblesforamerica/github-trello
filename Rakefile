@@ -84,6 +84,14 @@ end
 
 task :default => :spec
 
+task :list_users do
+	connect
+	puts @pg.userTable.inspect
+end
+
+task :list_repos do
+end
+
 task :show_user, :username do |t, args|
 	connect
 	username = args[:username]
@@ -198,7 +206,7 @@ task :delete_repo do
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
-		pg.deleteRepo(repo)
+		@pg.deleteRepo(repo)
 		puts "Repo deleted"
 	else end 
 end
@@ -211,7 +219,7 @@ task :delete_user do
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
-		pg.deleteUser(user)
+		@pg.deleteUser(user)
 		puts "User deleted"
 	else end 
 end
