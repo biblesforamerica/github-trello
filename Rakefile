@@ -24,7 +24,7 @@ def check_file (file, string)
 end
 
 def prompt_edit(key_type, key_name)
-	if key_type == "user"
+	if key_type == "username"
 		then array = ["oauth_token", "api_key"]
 		elsif key_type == "repo"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
@@ -66,7 +66,7 @@ def edit_field(key_type, key_name, field_name)
 end
 
 def display(key_type, key_name)
-	if key_type == "user"
+	if key_type == "username"
 		then array = ["oauth_token", "api_key"]
 			array.each_with_index do |k, i|
 				puts (i + 1).to_s+") "+k.to_s+": "+@pg.userTable[key_name][k].to_s
@@ -88,7 +88,7 @@ task :show_user, :username do |t, args|
 	connect
 	username = args[:username]
 	if @pg.userTable[username]
-		display("user", username)
+		display("username", username)
 	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
 	end
 end
@@ -173,7 +173,7 @@ task :edit_user do
 	STDOUT.puts "Which user would you like to edit?"
 	username = STDIN.gets.strip
 	if @pg.userTable[username]
-		prompt_edit("user", username)	
+		prompt_edit("username", username)	
 	else 
 		puts "This username does not exist. To create it, run rake add_user."
 	end
