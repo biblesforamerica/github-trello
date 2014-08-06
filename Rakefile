@@ -24,9 +24,9 @@ def check_file (file, string)
 end
 
 def prompt_edit(key_type, key_name)
-	if key_type == "users"
+	if key_type == "user"
 		then array = ["oauth_token", "api_key"]
-		elsif key_type == "repos"
+		elsif key_type == "repo"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
 		else print "Error: key_type not recognized" 
 	end
@@ -66,12 +66,12 @@ def edit_field(key_type, key_name, field_name)
 end
 
 def display(key_type, key_name)
-	if key_type == "users"
+	if key_type == "user"
 		then array = ["oauth_token", "api_key"]
 			array.each_with_index do |k, i|
 				puts (i + 1).to_s+") "+k.to_s+": "+@pg.userTable[key_name][k].to_s
 			end
-		elsif key_type == "repos"
+		elsif key_type == "repo"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
 			array.each_with_index do |k, i| 
 			puts (i + 1).to_s+") "+k.to_s+": "+@pg.repoTable[key_name][k].to_s
@@ -88,7 +88,7 @@ task :show_user, :username do |t, args|
 	connect
 	username = args[:username]
 	if @pg.userTable[username]
-		display("users", username)
+		display("user", username)
 	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
 	end
 end
@@ -97,7 +97,7 @@ task :show_repo, :repo do |t, args|
 	connect
 	repo = args[:repo]
 	if @pg.repoTable[repo]
-		display("repos", repo)
+		display("repo", repo)
 	else puts "This repo does not exist in the configuration file. To add it, run: \n  heroku run rake add_repo --app trello-github-integrate"
 	end
 end
@@ -173,7 +173,7 @@ task :edit_user do
 	STDOUT.puts "Which user would you like to edit?"
 	username = STDIN.gets.strip
 	if @pg.userTable[username]
-		prompt_edit("users", username)	
+		prompt_edit("user", username)	
 	else 
 		puts "This username does not exist. To create it, run rake add_user."
 	end
@@ -184,7 +184,7 @@ task :edit_repo do
 	STDOUT.puts "Which repo would you like to edit?"
 	repo = STDIN.gets.strip
 	if @pg.repoTable[repo]
-		prompt_edit("repos", repo)
+		prompt_edit("repo", repo)
 	else
 		puts "This repo does not exist. To create it, run rake add_repo."
 	end
