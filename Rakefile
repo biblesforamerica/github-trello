@@ -67,13 +67,14 @@ end
 def display(key_type, key_name)
 	if key_type == "users"
 		then array = ["oauth_token", "api_key"]
-		array.each_with_index do |k, i|
-			puts (i + 1).to_s+") "+k.to_s+": "+pg.userTable[key_name][k].to_s
-		end
+			array.each_with_index do |k, i|
+				puts (i + 1).to_s+") "+k.to_s+": "+pg.userTable[key_name][k].to_s
+			end
 		elsif key_type == "repos"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
+			array.each_with_index do |k, i| 
 			puts (i + 1).to_s+") "+k.to_s+": "+ypg.repoTable[key_name][k].to_s
-		end
+			end
 		else print "Error: key_type not recognized" 
 	end
 end
