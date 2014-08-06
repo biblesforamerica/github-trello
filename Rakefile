@@ -5,9 +5,15 @@ require "rake"
 require "rspec"
 require "rspec/core/rake_task"
 require "yaml"
+require "github-trello/postgres"
 
 RSpec::Core::RakeTask.new("spec") do |spec|
   spec.pattern = "spec/**/*_spec.rb"
+end
+
+def connect
+	pg = GithubTrello::Postgres.new
+	pg.connect
 end
 
 def check_file (file, string)
@@ -58,16 +64,17 @@ def edit_field(key_type, key_name, field_name, yml_file)
 		else end
 end
 
-def display(key_type, key_name, yml_file)
+def display(key_type, key_name)
 	if key_type == "users"
 		then array = ["oauth_token", "api_key"]
+		array.each_with_index do |k, i|
+			puts (i + 1).to_s+") "+k.to_s+": "+pg.userTable[key_name][k].to_s
+		end
 		elsif key_type == "repos"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
+			puts (i + 1).to_s+") "+k.to_s+": "+ypg.repoTable[key_name][k].to_s
+		end
 		else print "Error: key_type not recognized" 
-	end
-
-	array.each_with_index do |k, i|
-		puts (i + 1).to_s+") "+k.to_s+": "+yml_file[key_type][key_name][k].to_s
 	end
 end
 
@@ -76,10 +83,10 @@ end
 task :default => :spec
 
 task :show_user, :username do |t, args|
-	yml_file = YAML.load_file('conf.yml')
+	#yml_file = YAML.load_file('conf.yml')
 	username = args[:username]
-	if yml_file["users"][username]
-		display("users", username, yml_file)
+	if @pg.userTable[username]
+		display("users", username)
 	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
 	end
 end
