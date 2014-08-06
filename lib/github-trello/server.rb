@@ -64,12 +64,11 @@ module GithubTrello
         # next unless match and match[3].to_i > 0
         puts "hello"+match[3]
 
-        #get the cards
+        #get the cardsd
         # results = http.get_card(board_id, 4)
         results = http.get_card(board_id, match[3].to_i)
         unless results
           puts "[ERROR] Cannot find card matching ID #{match[3]}"
-          end
         end
 
         results = JSON.parse(results)
