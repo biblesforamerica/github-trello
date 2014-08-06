@@ -84,6 +84,9 @@ end
 
 task :default => :spec
 
+task :void do
+end
+
 task :list_users do
 	connect
 	@pg.userTable.each do |k, v|
