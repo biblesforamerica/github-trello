@@ -41,4 +41,4 @@ To run any task, run `heroku run rake TASK_NAME --app trello-github-integrate`
 * `rake edit_user`
 * `rake edit_repo`
 * `rake delete_user`
-* `rake delete_repo
+* `rake delete_repo`
