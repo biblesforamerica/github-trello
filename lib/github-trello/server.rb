@@ -83,28 +83,25 @@ module GithubTrello
 
         http.add_comment(results["id"], message)
 
-#         if match[2].downcase == "archive"
-#           then to_update = {:closed => true}
-#         else
-#           to_update = {}
-#           # Determine the action to take
-#           move_to = case match[2].downcase
-#             when "doing" then pg.repoTable[repo]["on_doing"] #config["repos"][repo]["on_doing"]
-#             when "review" then pg.repoTable[repo]["on_review"] #config["repos"][repo]["on_review"]
-#             when "done" then pg.repoTable[repo]["on_done"] #config["repos"][repo]["on_done"]
-#           end
+         if match[2].downcase == "archive"
+           then to_update = {:closed => true}
+         else
+           to_update = {}
+          # Determine the action to take
+          move_to = case match[2].downcase
+            when "doing" then pg.repoTable[repo]["on_doing"] #config["repos"][repo]["on_doing"]
+            when "review" then pg.repoTable[repo]["on_review"] #config["repos"][repo]["on_review"]
+            when "done" then pg.repoTable[repo]["on_done"] #config["repos"][repo]["on_done"]
+          end
 
-#            #move_to = update_config["move_to"]
+          unless results["idList"] == move_to
+            to_update[:idList] = move_to
+          end
 
-#           unless results["idList"] == move_to
-#             to_update[:idList] = move_to
-#           end
-#         end
-
-#         unless to_update.empty?
-#           http.update_card(results["id"], to_update)
-#         end
-#       end
+        unless to_update.empty?
+           http.update_card(results["id"], to_update)
+         end
+       end
 
        end
 
