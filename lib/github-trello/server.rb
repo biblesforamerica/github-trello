@@ -61,7 +61,9 @@ module GithubTrello
         #I THINK THE PROBLEM IS IN THE MATCH STATEMENT RIGHT HERE 
 
         match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        next unless match and match[3].to_i > 0
+        unless match and match[3].to_i > 0
+          next
+        end
         # puts "hello"+match[3]
 
         #get the cardsd
@@ -76,8 +78,8 @@ module GithubTrello
 
         # Add the commit comments
         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        message.gsub!(match[1], "")
-        message.gsub!(/\(\)$/, "")
+        # message.gsub!(match[1], "")
+        # message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
