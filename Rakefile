@@ -85,8 +85,9 @@ task :default => :spec
 
 task :show_user, :username do |t, args|
 	#yml_file = YAML.load_file('conf.yml')
+	connect
 	username = args[:username]
-	if @pg.userTable[username]
+	if pg.userTable[username]
 		display("users", username)
 	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
 	end
