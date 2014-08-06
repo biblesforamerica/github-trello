@@ -131,10 +131,10 @@ task :add_user do
 end
 
 task :add_repo do
+	connect
 	STDOUT.puts "Which github repository would you like to integrate? (eg. bfa_oms) "
 	repo = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-	if yml_file["repos"][repo]
+	if @pg.repoTable[repo]
 		puts "This repository exists in the configuration file. To edit it, run: \n  heroku run rake edit_repo --app trello-github-integrate"
 	else 
 		STDOUT.print "This repo will be added to the configuration file. Continue (y) or exit (any other key): "
@@ -159,12 +159,7 @@ task :add_repo do
 				print "To save, press \'y\', to exit, press any other key." 
 				save = STDIN.gets.strip
 				if save == "y" then 
-					yml_file["repos"][repo] = { "board_id" => board, 
-						"on_doing" => doing,
-						"on_review" => review,
-						"on_done" => done
-						}
-					File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+					@pg.addRepo(repo, board, doing, review, done)
 					puts "Saved"
 				else end
 			else
