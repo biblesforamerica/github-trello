@@ -41,7 +41,7 @@ def prompt_edit(key_type, key_name)
 		# end
 		puts "Which field would you like to edit? (eg. 1) \n"
 		field_no = STDIN.gets.strip
-	end while (field_no.to_i < 0 || field_no.to_i > array.size + 1)
+	end while (field_no.to_i < 0 || field_no.to_i > array.size)
 
 	unless field_no == "0"
 		field = array.at(field_no.to_i - 1)
@@ -52,7 +52,7 @@ def prompt_edit(key_type, key_name)
 end
 
 def edit_field(key_type, key_name, field_name)
-		print "Please enter a new "+ field_name + ": "
+		print "Please enter a new "+ field_name + " value: "
 		ot = STDIN.gets.strip
 		print "Press y to save or any other key to cancel: "
 		if STDIN.gets.strip == "y" 
