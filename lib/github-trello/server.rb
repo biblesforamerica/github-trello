@@ -69,13 +69,13 @@ module GithubTrello
         end
 
         results = JSON.parse(results)
-        puts "look here!"
+        puts "look here now!"
 
         # Add the commit comment
-        #message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        message = "hello"
-        # message.gsub!(match[1], "")
-        # message.gsub!(/\(\)$/, "")
+        message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
+        # message = "hello"
+        message.gsub!(match[1], "")
+        message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
