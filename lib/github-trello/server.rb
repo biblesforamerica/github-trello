@@ -57,12 +57,12 @@ module GithubTrello
       commits.each do |commit|
       # payload["commits"].each do |commit|
         # Figure out the card short id toggle
-        # match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        # next unless match and match[3].to_i > 0
+        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+        next unless match and match[3].to_i > 0
 
         #get the card
-        #results = http.get_card(board_id, match[3].to_i)
-        results = http.get_card(board_id, 3)
+        results = http.get_card(board_id, match[3].to_i)
+        # results = http.get_card(board_id, 3)
         unless results
           puts "[ERROR] Cannot find card matching ID #{match[3]}"
           next
@@ -71,10 +71,10 @@ module GithubTrello
         results = JSON.parse(results)
 
         # Add the commit comment
-        # message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-         message = "test commit"
-        # message.gsub!(match[1], "")
-        # message.gsub!(/\(\)$/, "")
+        message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
+         # message = "test commit"
+        message.gsub!(match[1], "")
+        message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
