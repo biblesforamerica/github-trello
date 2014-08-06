@@ -1,8 +1,0 @@
----
-users:
-  init: 
-  burricks:
-    oauth_token: '456'
-    api_key: '123'
-repos:
-  init: 
