@@ -45,20 +45,20 @@ module GithubTrello
 
       http = GithubTrello::HTTP.new(pg.userTable[committer]["oauth_token"], pg.userTable[committer]["api_key"])
 
-      puts payload["commits"].inspect
-      array = ["hello", "everybody", "praise", "the", "Lord!"]
-      #puts array
-      array.each do |a|
-        print " yay! "
-        print a
-      end
+      # puts payload["commits"].inspect
+      # array = ["hello", "everybody", "praise", "the", "Lord!"]
+      # #puts array
+      # array.each do |a|
+      #   print " yay! "
+      #   print a
+      # end
 
       commits = payload["commits"]
       commits.each do |commit|
       # payload["commits"].each do |commit|
         # Figure out the card short id toggle
-        match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        next unless match and match[3].to_i > 0
+        # match = commit["message"].match(/((doing|review|done|archive)e?s? \D?([0-9]+))/i)
+        # next unless match and match[3].to_i > 0
 
         #get the card
         #results = http.get_card(board_id, match[3].to_i)
@@ -69,13 +69,13 @@ module GithubTrello
         end
 
         results = JSON.parse(results)
-        puts "look here now!"
+        # puts "look here now!"
 
         # Add the commit comment
-        message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
-        # message = "hello"
-        message.gsub!(match[1], "")
-        message.gsub!(/\(\)$/, "")
+        # message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
+         message = "test commit"
+        # message.gsub!(match[1], "")
+        # message.gsub!(/\(\)$/, "")
 
         http.add_comment(results["id"], message)
 
