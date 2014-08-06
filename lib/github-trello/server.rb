@@ -49,7 +49,7 @@ module GithubTrello
         end
         results = JSON.parse(results)
 
-        # Add the commit comments
+        # Add the commit comment
         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
         message.gsub!(match[1], "")
         message.gsub!(/\(\)$/, "")
@@ -87,6 +87,6 @@ module GithubTrello
     get '/' do
       ""
     end
-    
+
   end
 end
