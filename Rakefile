@@ -84,7 +84,6 @@ end
 task :default => :spec
 
 task :show_user, :username do |t, args|
-	#yml_file = YAML.load_file('conf.yml')
 	connect
 	username = args[:username]
 	if @pg.userTable[username]
@@ -94,10 +93,10 @@ task :show_user, :username do |t, args|
 end
 
 task :show_repo, :repo do |t, args|
-	yml_file = YAML.load_file('conf.yml')
+	connect
 	repo = args[:repo]
-	if yml_file["repos"][repo]
-		display("repos", repo, yml_file)
+	if @pg.repoTable[repo]
+		display("repos", repo)
 	else puts "This repo does not exist in the configuration file. To add it, run: \n  heroku run rake add_repo --app trello-github-integrate"
 	end
 end
