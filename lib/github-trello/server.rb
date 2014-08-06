@@ -64,7 +64,7 @@ module GithubTrello
         # next unless match and match[3].to_i > 0
         puts "hello"+match[3]
 
-        #get the card
+        #get the cards
         # results = http.get_card(board_id, 4)
         results = http.get_card(board_id, match[3].to_i)
         unless results
