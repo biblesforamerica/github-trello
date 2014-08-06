@@ -70,7 +70,7 @@ module GithubTrello
 
         results = JSON.parse(results)
 
-        # Add the commit comment
+        # Add the commit comments
         message = "#{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
          # message = "test commit"
         message.gsub!(match[1], "")
