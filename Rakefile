@@ -23,7 +23,7 @@ def check_file (file, string)
 	false
 end
 
-def prompt_edit(key_type, key_name, yml_file)
+def prompt_edit(key_type, key_name)
 	if key_type == "users"
 		then array = ["oauth_token", "api_key"]
 		elsif key_type == "repos"
@@ -43,23 +43,22 @@ def prompt_edit(key_type, key_name, yml_file)
 
 	unless field_no == "0"
 		field = array.at(field_no.to_i - 1)
-		edit_field(key_type, key_name, field, yml_file)
+		edit_field(key_type, key_name, field)
 	end
 
 	puts "Canceled"
 end
 
-def edit_field(key_type, key_name, field_name, yml_file)
+def edit_field(key_type, key_name, field_name)
 		print "Please enter a new "+ field_name + ": "
 		ot = STDIN.gets.strip
 		print "Press y to save or any other key to cancel: "
 		if STDIN.gets.strip == "y" 
 		then 
-			yml_file[key_type][key_name][field_name] = ot
-			File.open('conf.yml', 'w') { |f| YAML.dump(yml_file, f)}
+			@pg.update(key_type, key_name, field_name, ot)
 			print "To make any further edits, press y, to cancel press any other key: "
 			if STDIN.gets.strip == "y" 
-			then prompt_edit(key_type, key_name, yml_file)
+			then prompt_edit(key_type, key_name)
 			else end
 		else end
 end
@@ -115,7 +114,7 @@ task :add_user do
 				key = STDIN.gets.strip
 				puts "\nNow, input your token. This can be found at: https://trello.com/1/authorize?response_type=token&name=Trello+Github+Integration&scope=read,write&expiration=never&key="+key
 				token = STDIN.gets.strip
-				puts "Thank you for your cooperation. Your input values appear below - please review them"
+				puts "Thank you for your cooperation. Please review your input values"
 				puts "username: "+username+"\n"+ 
 				"key: "+key+"\n"+
 				"token: "+token
@@ -149,7 +148,7 @@ task :add_repo do
 				review = STDIN.gets.strip
 				print "Done: "
 				done = STDIN.gets.strip
-				puts "Thank you for your cooperation. Your input values appear below - please review them"
+				puts "Thank you for your cooperation. Please review your input values"
 				puts 
 				"repository name: "+repo+"\n"+
 				"board id: "+board+"\n"+
@@ -168,27 +167,22 @@ task :add_repo do
 end
 
 task :edit_user do
+	connect 
 	STDOUT.puts "Which user would you like to edit?"
 	username = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-
-	if yml_file["users"][username]
-		#display variables associated with user
-		prompt_edit("users", username, yml_file)	
+	if @pg.userTable[username]
+		prompt_edit("users", username)	
 	else 
 		puts "This username does not exist. To create it, run rake add_user."
 	end
 end
 
 task :edit_repo do
+	connect
 	STDOUT.puts "Which repo would you like to edit?"
 	repo = STDIN.gets.strip
-	yml_file = YAML.load_file('conf.yml')
-
-	#check if the user exists
-	if yml_file["repos"][repo]
-		#display variables associated with user
-		prompt_edit("repos", repo, yml_file)
+	if @pg.repoTable[repo]
+		prompt_edit("repos", repo)
 	else
 		puts "This repo does not exist. To create it, run rake add_repo."
 	end
