@@ -53,15 +53,15 @@ module GithubTrello
       #   print a
       # end
 
-      commits = payload["commits"]
-      commits.each do |commit|
+      commits = payload["commits"].each do |commit|
+      #commits.each do |commit|
       # payload["commits"].each do |commit|
         # Figure out the card short id toggle
 
         #I THINK THE PROBLEM IS IN THE MATCH STATEMENT RIGHT HERE 
 
         match = commit["message"].match(/((card|doing|review|done|archive)e?s? \D?([0-9]+))/i)
-        # unless match and match[3].to_i > 0
+        next unless match and match[3].to_i > 0
         #   next
         # end
         # puts "hello"+match[3]
@@ -71,7 +71,7 @@ module GithubTrello
         results = http.get_card(board_id, match[3].to_i)
         unless results
           puts "[ERROR] Cannot find card matching ID #{match[3]}"
-          # next
+          next
         end
 
         results = JSON.parse(results)
