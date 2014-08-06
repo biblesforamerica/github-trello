@@ -12,8 +12,8 @@ RSpec::Core::RakeTask.new("spec") do |spec|
 end
 
 def connect
-	pg = GithubTrello::Postgres.new
-	pg.connect
+	@pg = GithubTrello::Postgres.new
+	@pg.connect
 end
 
 def check_file (file, string)
@@ -68,12 +68,12 @@ def display(key_type, key_name)
 	if key_type == "users"
 		then array = ["oauth_token", "api_key"]
 			array.each_with_index do |k, i|
-				puts (i + 1).to_s+") "+k.to_s+": "+pg.userTable[key_name][k].to_s
+				puts (i + 1).to_s+") "+k.to_s+": "+@pg.userTable[key_name][k].to_s
 			end
 		elsif key_type == "repos"
 		then array = ["board_id", "on_doing", "on_review", "on_done"]
 			array.each_with_index do |k, i| 
-			puts (i + 1).to_s+") "+k.to_s+": "+ypg.repoTable[key_name][k].to_s
+			puts (i + 1).to_s+") "+k.to_s+": "+@pg.repoTable[key_name][k].to_s
 			end
 		else print "Error: key_type not recognized" 
 	end
@@ -87,7 +87,7 @@ task :show_user, :username do |t, args|
 	#yml_file = YAML.load_file('conf.yml')
 	connect
 	username = args[:username]
-	if pg.userTable[username]
+	if @pg.userTable[username]
 		display("users", username)
 	else puts "The user does not exist in the configuration file. To add it, run: \n  heroku run rake add_user --app trello-github-integrate "
 	end
