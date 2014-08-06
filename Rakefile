@@ -86,10 +86,16 @@ task :default => :spec
 
 task :list_users do
 	connect
-	puts @pg.userTable.inspect
+	@pg.userTable.each do |k, v|
+		puts k
+	end
 end
 
 task :list_repos do
+	connect
+	@pg.repoTable.inspect do |k, v|
+		puts k
+	end
 end
 
 task :show_user, :username do |t, args|
