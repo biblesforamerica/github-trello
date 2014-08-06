@@ -47,9 +47,9 @@ module GithubTrello
 
       puts payload["commits"].inspect
       array = ["hello", "everybody", "praise", "the", "Lord!"]
-      puts array
+      #puts array
       array.each do |a|
-        print "yay! "
+        print " yay! "
         print a
       end
 
