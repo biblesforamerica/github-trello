@@ -93,7 +93,7 @@ end
 
 task :list_repos do
 	connect
-	@pg.repoTable.inspect do |k, v|
+	@pg.repoTable.each do |k, v|
 		puts k
 	end
 end
