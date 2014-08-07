@@ -2,4 +2,4 @@ language: ruby
 rvm:
   - "2.1.2"
 # uncomment this line if your project needs to run something other than `rake`:
-script: rake void
+script: bundle exec rake void
