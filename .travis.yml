@@ -1,7 +1,7 @@
 language: ruby
 rvm:
   - "2.1.2"
-# uncomment this line if your project needs to run something other than `rake`:
+# uncomment this line if your project needs to run something other than `rake` here:
 script: bundle exec rake void
 after_success :
  - git push -f git@heroku.com:tg-shippable.git master
