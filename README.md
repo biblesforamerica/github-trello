@@ -2,10 +2,24 @@ The code in this repository is deployed on *heroku* as an app named **trello-git
 
 ## Set Up
 ### Add a user
-As a first time user, to add your information to the database, run `heroku run rake add_user --app trello-github-integrate`. You will be asked to input your github **username**, your **oauth_token**, and your **api_key**. The task will provide help in obtaining your trello token and key. **Ensure that you input your github username, not your trello username.**
+  
+As a first time user, to add your information to the database, run:
+  
+```
+heroku run rake add_user --app trello-github-integrate
+```
+
+You will be asked to input your github **username**, your **oauth_token**, and your **api_key**. The task will provide help in obtaining your trello token and key. **Ensure that you input your github username, not your trello username.**
 
 ### Add a repo
-If you want to integrate a brand new github repository, run `heroku run rake add_repo --app trello-github-integrate`. You will be asked to provide the **board_id** for the *trello* board you intend to integrate. Next, you will be asked to provide *list_id*'s for three different lists associated with the commands "doing", "review", and "done". If you choose not to provide a list for a specific action, simply input 'none'. See below for more information about what these list_id's will be used for. As before, the rake task should provide ample information to help you find the needed id's. 
+  
+If you want to integrate a brand new github repository, run:
+
+```
+heroku run rake add_repo --app trello-github-integrate
+```
+
+You will be asked to provide the **board_id** for the *trello* board you intend to integrate. Next, you will be asked to provide *list_id*'s for three different lists associated with the commands "doing", "review", and "done". If you choose not to provide a list for a specific action, simply input 'none'. See below for more information about what these list_id's will be used for. As before, the rake task should provide ample information to help you find the needed id's. 
 
 ### Establish the webhook
 The final step needed before your new repository is fully integrated, is to set up the webhook pointing to the application on *github*. 
