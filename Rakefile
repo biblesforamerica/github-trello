@@ -124,12 +124,12 @@ task :add_user do
 	STDOUT.puts "What is your github username?"
 	username = STDIN.gets.strip
 	if @pg.userTable[username]
-		puts "This username exists in the configuration file. To edit it, run: \n  heroku run rake edit_user --app trello-github-integrate"
+		puts "\nThis username exists in the configuration file. To edit it, run: \n  heroku run rake edit_user --app trello-github-integrate"
 	else 
 		STDOUT.puts "Your username will be added to the configuration file. Press 'y' to continue, or any other key to exit"
 		continue = STDIN.gets.strip
 		if continue == 'y' 
-			then puts "First, input your key. To find this, go to https://trello.com/1/appKey/generate"
+			then puts "\nFirst, input your key. To find this, go to https://trello.com/1/appKey/generate"
 				key = STDIN.gets.strip
 				puts "\nNow, input your token. This can be found at: https://trello.com/1/authorize?response_type=token&name=Trello+Github+Integration&scope=read,write&expiration=never&key="+key
 				token = STDIN.gets.strip
@@ -153,12 +153,12 @@ task :add_repo do
 	STDOUT.puts "Which github repository would you like to integrate? (eg. bfa_oms) "
 	repo = STDIN.gets.strip
 	if @pg.repoTable[repo]
-		puts "This repository exists in the configuration file. To edit it, run: \n  heroku run rake edit_repo --app trello-github-integrate"
+		puts "\nThis repository exists in the configuration file. To edit it, run: \n  heroku run rake edit_repo --app trello-github-integrate"
 	else 
-		STDOUT.print "This repo will be added to the configuration file. Continue (y) or exit (any other key): "
+		STDOUT.print "\nThis repo will be added to the configuration file. Continue (y) or exit (any other key): "
 		continue = STDIN.gets.strip
 		if continue == 'y' 
-			then puts "First, please supply the trello board-id where you would like your commit messages to appear. This can be found by clickling on a card in the board, finding the \'share and more\' link on the bottom right, and exporting the JSON. In the JSON output, find a field called idBoard. This is your input value."
+			then puts "\nFirst, please supply the trello board-id where you would like your commit messages to appear. This can be found by clickling on a card in the board, finding the \'share and more\' link on the bottom right, and exporting the JSON. In the JSON output, find a field called idBoard. This is your input value.\nboard-id: "
 				board = STDIN.gets.strip
 				puts "\nNow, follow the same method within specific lists on your trello board to provide the list ids which correspond to the locations where you would like cards to be placed while in progress (Doing), ready for review (Review), or finished (Done)."
 				print "Doing: "
@@ -167,7 +167,7 @@ task :add_repo do
 				review = STDIN.gets.strip
 				print "Done: "
 				done = STDIN.gets.strip
-				puts "Thank you for your cooperation. Please review your input values"
+				puts "\nThank you for your cooperation. Please review your input values"
 				puts 
 				"repository name: "+repo+"\n"+
 				"board id: "+board+"\n"+
@@ -192,7 +192,7 @@ task :edit_user do
 	if @pg.userTable[username]
 		prompt_edit("username", username)	
 	else 
-		puts "This username does not exist. To create it, run rake add_user."
+		puts "\nThis username does not exist. To create it, run rake add_user."
 	end
 end
 
@@ -203,7 +203,7 @@ task :edit_repo do
 	if @pg.repoTable[repo]
 		prompt_edit("repo", repo)
 	else
-		puts "This repo does not exist. To create it, run rake add_repo."
+		puts "\nThis repo does not exist. To create it, run rake add_repo."
 	end
 end
 
@@ -211,7 +211,7 @@ task :delete_repo do
 	connect
 	STDOUT.puts "Which repo would you like to delete?"
 	repo = STDIN.gets.strip
-	print "Are you sure you want to delete the repository information for " +repo+"? If so, press 'y'. To cancel, press any other key: "
+	print "\nAre you sure you want to delete the repository information for " +repo+"? If so, press 'y'. To cancel, press any other key: "
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
@@ -224,7 +224,7 @@ task :delete_user do
 	connect
 	STDOUT.puts "Which user would you like to delete?"
 	user = STDIN.gets.strip
-	print "Are you sure you want to delete the user information for " +user+"? If so, press 'y'. To cancel, press any other key: "
+	print "\nAre you sure you want to delete the user information for " +user+"? If so, press 'y'. To cancel, press any other key: "
 	response = STDIN.gets.strip
 	if response == "y" 
 	then 
