@@ -5,11 +5,12 @@ module GithubTrello
     # CONNECT
     def connect
       @conn = PG.connect(
-          :dbname => 'daoej6cm9u6nbj',
-          :user => 'bdttiqmmgykpvt',
-          :password => 'hxdYT4VWTXSzEpeUUYER2ZAJy8',
-          :host => 'ec2-54-225-101-124.compute-1.amazonaws.com',
-          :port => 5432)
+          :dbname => ENV["PG_DBNAME"],
+          :user => ENV["PG_USER"],
+          :password => ENV["PG_PASSWORD"],
+
+          :host => ENV["PG_HOST"], 
+          :port => ENV["PG_PORT"])
     end
 
     ## CREATE

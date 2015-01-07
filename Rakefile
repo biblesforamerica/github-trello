@@ -121,7 +121,7 @@ end
 
 task :add_user do
 	connect
-	STDOUT.puts "What is your github username?"
+	STDOUT.puts "\nWhat is your github username?"
 	username = STDIN.gets.strip
 	if @pg.userTable[username]
 		puts "\nThis username exists in the configuration file. To edit it, run: \n  heroku run rake edit_user --app trello-github-integrate"
@@ -129,11 +129,11 @@ task :add_user do
 		STDOUT.puts "Your username will be added to the configuration file. Press 'y' to continue, or any other key to exit"
 		continue = STDIN.gets.strip
 		if continue == 'y' 
-			then puts "\nFirst, input your key. To find this, go to https://trello.com/1/appKey/generate"
+			then puts "\nNext, input your key. To find this, go to https://trello.com/1/appKey/generate"
 				key = STDIN.gets.strip
 				puts "\nNow, input your token. This can be found at: https://trello.com/1/authorize?response_type=token&name=Trello+Github+Integration&scope=read,write&expiration=never&key="+key
 				token = STDIN.gets.strip
-				puts "Thank you for your cooperation. Please review your input values"
+				puts "\nThanks! Please review your input values:"
 				puts "username: "+username+"\n"+ 
 				"key: "+key+"\n"+
 				"token: "+token
